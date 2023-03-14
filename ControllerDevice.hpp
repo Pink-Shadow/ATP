@@ -1,6 +1,6 @@
 
-#include "serial/serial.h"
 #include <iostream>
+#include "serial/serial.h"
 
 class ControllerDevice {
 private:

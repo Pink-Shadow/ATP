@@ -1,3 +1,6 @@
+# Cheat sheet: https://bytes.usc.edu/cs104/wiki/makefile/
+
+#######################################################
 # For example, consider the following declaration:
 
 # "all: library.cpp main.cpp"
@@ -8,6 +11,7 @@
 # $^ evaluates to "library.cpp main.cpp"
 #SOURCE: https://stackoverflow.com/questions/3220277/what-do-the-makefile-symbols-and-mean
 #SOURCE: https://www.gnu.org/software/make/manual/html_node/Automatic-Variables.html#Automatic-Variables
+#######################################################
 
 # compiler flags:
 #  -g     - this flag adds debugging information to the executable file
@@ -30,7 +34,7 @@ run: $(TARGET).exe
 	./$(TARGET).exe
 
 # link *.o files to target .exe binary
-$(TARGET).exe: $(TARGET).o ControllerDevice.o
+$(TARGET).exe: $(TARGET).o ControllerDevice.o ControllerInput.o
 	$(COMPILER) $(CFLAGS) $^ -o $@
 
 # build *.o files
@@ -40,6 +44,9 @@ $(TARGET).o : $(TARGET).cpp
 ControllerDevice.o: ControllerDevice.cpp ControllerDevice.hpp
 	$(COMPILER) $(CFLAGS) -c $< -o $@
 
+ControllerInput.o: ControllerInput.cpp ControllerInput.hpp
+	$(COMPILER) $(CFLAGS) -c $< -o $@
+
 # cleanup all *.o files
 clean:
-	$(RM) $(TARGET).o ControllerDevice.o
+	$(RM) *.o
