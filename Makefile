@@ -1,52 +1,21 @@
-# Cheat sheet: https://bytes.usc.edu/cs104/wiki/makefile/
+PYTHON_INCLUDES := $(shell python3-config --includes)
+PYTHON_MODULEFILE = ATP${shell python3-config --extension-suffix}
 
-#######################################################
-# For example, consider the following declaration:
+.DEFAULT_GOAL := all
+.PHONY: all run build clean
 
-# "all: library.cpp main.cpp"
+all: run build
 
-# In this case:
-# $@ evaluates to "all"
-# $< evaluates to "library.cpp"
-# $^ evaluates to "library.cpp main.cpp"
-#SOURCE: https://stackoverflow.com/questions/3220277/what-do-the-makefile-symbols-and-mean
-#SOURCE: https://www.gnu.org/software/make/manual/html_node/Automatic-Variables.html#Automatic-Variables
-#######################################################
+build: $(PYTHON_MODULEFILE)
 
-# compiler flags:
-#  -g     - this flag adds debugging information to the executable file
-#  -Wall  - this flag is used to turn on most compiler warnings
+run: build
+	@echo "Executing ATP.py..."
+	@python3 ATP.py
 
+$(PYTHON_MODULEFILE): ControllerDevice.cpp ControllerDevice.hpp ControllerInput.cpp ControllerInput.hpp main.cpp
+	@echo "Building $(PYTHON_MODULEFILE)..."
+	@c++ -O3 -Wall -shared -std=c++11 -fPIC $(PYTHON_INCLUDES) -Ipybind11/include ControllerDevice.cpp ControllerInput.cpp main.cpp -o $(PYTHON_MODULEFILE)
 
-
-# the compiler: gcc for C program, define as g++ for C++
-COMPILER = g++
-RM = del
-
-# Specify include dir, so g++ knows where to look for file that you #include
-INC_DIR = serial/include
-CFLAGS= -g -Wall -I $(INC_DIR) 
-
-TARGET = main
-
-# execute binary after its been build
-run: $(TARGET).exe
-	./$(TARGET).exe
-
-# link *.o files to target .exe binary
-$(TARGET).exe: $(TARGET).o ControllerDevice.o ControllerInput.o
-	$(COMPILER) $(CFLAGS) $^ -o $@
-
-# build *.o files
-$(TARGET).o : $(TARGET).cpp
-	$(COMPILER) $(CFLAGS) -c $< -o $@
-
-ControllerDevice.o: ControllerDevice.cpp ControllerDevice.hpp
-	$(COMPILER) $(CFLAGS) -c $< -o $@
-
-ControllerInput.o: ControllerInput.cpp ControllerInput.hpp
-	$(COMPILER) $(CFLAGS) -c $< -o $@
-
-# cleanup all *.o files
 clean:
-	$(RM) *.o
+	@echo "Removing $(PYTHON_MODULEFILE)"
+	@rm -f $(PYTHON_MODULEFILE)
