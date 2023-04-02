@@ -1,8 +1,8 @@
 #include "ControllerDevice.hpp"
 
-ControllerDevice::ControllerDevice(serial::Serial &USB_dev):
-    USB_Device(USB_dev)
-{}
+ControllerDevice::ControllerDevice(){//serial::Serial &USB_dev):
+    // USB_Device(USB_dev)
+}
 
 void ControllerDevice::set_cruise_state(bool state){
     cruise_state = state;
