@@ -1,16 +1,17 @@
 #include "ControllerDevice.hpp"
 
-ControllerDevice::ControllerDevice(){//serial::Serial &USB_dev):
-    // USB_Device(USB_dev)
-}
+ControllerDevice::ControllerDevice(ControllerInputData & input_data):
+    input_data(input_data)
+{}
 
 void ControllerDevice::set_cruise_state(bool state){
     cruise_state = state;
+    input_data.set_cruise_state(state);
 }
 
 void ControllerDevice::set_brake(bool brake){
-    // TODO: add function call to Controller_input entitiy "Controller_input.change_brakes(brake)"
-    std::cout << "brake changed to: " << brake << std::endl;
+    std::cout << "(called from ControllerDevice) " << " brake changed to: " << brake << std::endl;
+    input_data.change_brakes(brake);
 }
 
 int ControllerDevice::read_acceleration(){

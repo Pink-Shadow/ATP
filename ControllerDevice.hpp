@@ -1,16 +1,22 @@
+#ifndef CONTROLLER_DEVICE_HPP
+#define CONTROLLER_DEVICE_HPP
+
 #include <iostream>
-// #include "serial/serial.h"
+#include "ControllerInputData.hpp"
 
 class ControllerDevice {
 private:
-    // serial::Serial &USB_Device;
+    ControllerInputData & input_data;
     bool cruise_state;
     int speed_throttle; // TODO: make class? to read out value.
 
+
 public:
-    ControllerDevice(); //serial::Serial &USB_dev);
+    ControllerDevice(ControllerInputData & input_data);
 
     void set_cruise_state(bool state);
     void set_brake(bool brake);
     int read_acceleration();
 };
+
+#endif // CONTROLLER_DEVICE_HPP
