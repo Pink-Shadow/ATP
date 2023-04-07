@@ -1,3 +1,19 @@
+#######################################################
+# Cheat sheet: https://bytes.usc.edu/cs104/wiki/makefile/
+# NOTES TO MYSELF:
+
+# For example, consider the following declaration:
+
+# "all: library.cpp main.cpp"
+
+# In this case:
+# $@ evaluates to "all"
+# $< evaluates to "library.cpp"
+# $^ evaluates to "library.cpp main.cpp"
+#SOURCE: https://stackoverflow.com/questions/3220277/what-do-the-makefile-symbols-and-mean
+#SOURCE: https://www.gnu.org/software/make/manual/html_node/Automatic-Variables.html#Automatic-Variables
+#######################################################
+
 INC_DIR = pybind11/include
 TARGET = ATP
 COMPILER = c++
@@ -17,7 +33,7 @@ run: build
 	@python3 ATP.py
 
 # link *.o files to target .so file
-$(PYTHON_MODULEFILE): Brake_button.o Cruise_button.o sharedPybind.o
+$(PYTHON_MODULEFILE): Brake_button.o Cruise_button.o sharedPybind.o ControllerDevice.o ControllerInputData.o BrakeSystem.o DriveControl.o PIDSystem.o
 	$(COMPILER) $(CFLAGS_LINUX) $^ -o $@
 
 sharedPybind.o: sharedPybind.cpp Brake_button.hpp Cruise_button.hpp Button.hpp
@@ -29,6 +45,20 @@ Brake_button.o: Brake_button.cpp Brake_button.hpp
 Cruise_button.o: Cruise_button.cpp Cruise_button.hpp
 	$(COMPILER) $(CFLAGS_LINUX) -c $< -o $@
 
+ControllerDevice.o: ControllerDevice.cpp ControllerDevice.hpp ControllerInputData.hpp
+	$(COMPILER) $(CFLAGS_LINUX) -c $< -o $@
+
+ControllerInputData.o: ControllerInputData.cpp ControllerInputData.hpp DriveControl.hpp
+	$(COMPILER) $(CFLAGS_LINUX) -c $< -o $@
+
+BrakeSystem.o: BrakeSystem.cpp BrakeSystem.hpp
+	$(COMPILER) $(CFLAGS_LINUX) -c $< -o $@
+
+DriveControl.o: DriveControl.cpp DriveControl.hpp BrakeSystem.hpp PIDSystem.hpp
+	$(COMPILER) $(CFLAGS_LINUX) -c $< -o $@
+
+PIDSystem.o: PIDSystem.cpp PIDSystem.hpp
+	$(COMPILER) $(CFLAGS_LINUX) -c $< -o $@
 
 clean:
 	@echo "Removing $(PYTHON_MODULEFILE)"

@@ -9,12 +9,12 @@ class Button{
         }
 
         bool get_button_state(){
-            std::cout << "hii" << std::endl;
-            return this->button_state;
+            std::cout << "get_button_state from class Button called" << std::endl;
+            return button_state;
 
         }
         void set_button_state(const int & state){
-            this->button_state = state;
+            button_state = state;
         }
 
     private:
