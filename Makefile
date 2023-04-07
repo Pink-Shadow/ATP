@@ -1,3 +1,7 @@
+#######################################################
+# Cheat sheet: https://bytes.usc.edu/cs104/wiki/makefile/
+# NOTES TO MYSELF:
+
 # For example, consider the following declaration:
 
 # "all: library.cpp main.cpp"
@@ -8,38 +12,57 @@
 # $^ evaluates to "library.cpp main.cpp"
 #SOURCE: https://stackoverflow.com/questions/3220277/what-do-the-makefile-symbols-and-mean
 #SOURCE: https://www.gnu.org/software/make/manual/html_node/Automatic-Variables.html#Automatic-Variables
+#######################################################
 
-# compiler flags:
-#  -g     - this flag adds debugging information to the executable file
-#  -Wall  - this flag is used to turn on most compiler warnings
+INC_DIR = pybind11/include
+TARGET = ATP
+COMPILER = c++
+CFLAGS_LINUX = -O3 -Wall -shared -std=c++11 -fPIC $(shell python3-config --includes) -I $(INC_DIR) -I ./
+PYTHON_MODULEFILE = $(TARGET)${shell python3-config --extension-suffix}
 
 
+.DEFAULT_GOAL := all
+.PHONY: all run build clean
 
-# the compiler: gcc for C program, define as g++ for C++
-COMPILER = g++
-RM = del
+all: run build
 
-# Specify include dir, so g++ knows where to look for file that you #include
-INC_DIR = serial/include
-CFLAGS= -g -Wall -I $(INC_DIR) 
+build: $(PYTHON_MODULEFILE)
 
-TARGET = main
+run: build
+	@echo "Executing python file..."
+	@python3 ATP.py
 
-# execute binary after its been build
-run: $(TARGET).exe
-	./$(TARGET).exe
+# link *.o files to target .so file
+$(PYTHON_MODULEFILE): Brake_button.o Cruise_button.o sharedPybind.o ControllerDevice.o ControllerInputData.o BrakeSystem.o DriveControl.o PIDSystem.o
+	$(COMPILER) $(CFLAGS_LINUX) $^ -o $@
 
-# link *.o files to target .exe binary
-$(TARGET).exe: $(TARGET).o ControllerDevice.o
-	$(COMPILER) $(CFLAGS) $^ -o $@
+sharedPybind.o: sharedPybind.cpp Brake_button.hpp Cruise_button.hpp Button.hpp
+	$(COMPILER) $(CFLAGS_LINUX) -c $< -o $@
 
-# build *.o files
-$(TARGET).o : $(TARGET).cpp
-	$(COMPILER) $(CFLAGS) -c $< -o $@
+Brake_button.o: Brake_button.cpp Brake_button.hpp 
+	$(COMPILER) $(CFLAGS_LINUX) -c $< -o $@
 
-ControllerDevice.o: ControllerDevice.cpp ControllerDevice.hpp
-	$(COMPILER) $(CFLAGS) -c $< -o $@
+Cruise_button.o: Cruise_button.cpp Cruise_button.hpp
+	$(COMPILER) $(CFLAGS_LINUX) -c $< -o $@
 
-# cleanup all *.o files
+ControllerDevice.o: ControllerDevice.cpp ControllerDevice.hpp ControllerInputData.hpp
+	$(COMPILER) $(CFLAGS_LINUX) -c $< -o $@
+
+ControllerInputData.o: ControllerInputData.cpp ControllerInputData.hpp DriveControl.hpp
+	$(COMPILER) $(CFLAGS_LINUX) -c $< -o $@
+
+BrakeSystem.o: BrakeSystem.cpp BrakeSystem.hpp
+	$(COMPILER) $(CFLAGS_LINUX) -c $< -o $@
+
+DriveControl.o: DriveControl.cpp DriveControl.hpp BrakeSystem.hpp PIDSystem.hpp
+	$(COMPILER) $(CFLAGS_LINUX) -c $< -o $@
+
+PIDSystem.o: PIDSystem.cpp PIDSystem.hpp
+	$(COMPILER) $(CFLAGS_LINUX) -c $< -o $@
+
 clean:
-	$(RM) $(TARGET).o ControllerDevice.o
+	@echo "Removing $(PYTHON_MODULEFILE)"
+	@rm -f $(PYTHON_MODULEFILE)
+
+	@echo "Removing *.o files"
+	@rm -f *.o
