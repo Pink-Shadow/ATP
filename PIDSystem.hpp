@@ -20,7 +20,7 @@ private:
     float i_error = 0;
 
     float accel_percentage;
-    float current_speed = 1;
+    float current_speed = 50;
 
     float calculate_current_speed(int hall_pulses);
     float get_speed_error();
