@@ -61,7 +61,7 @@ def exec_pid(f):
 @timer
 @exec_pid
 def execute_func2(f):
-    print(f"Motor power = : {round(f, 2)} \t{'%': <15}Current speed: {round(Drive.get_current_speed(), 2)}")
+    print(f"Motor power = : {round(f, 2)} {'%': <15}\tCurrent speed: {round(Drive.get_current_speed(), 2)}")
 
 
 print(f"Setpoint is set to: {setpoint}")
