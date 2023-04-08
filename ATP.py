@@ -45,7 +45,7 @@ ControllerDevice.set_brake(0)
 
 ## SYSTEM TEST 1
 print("\n ------ SYSTEM TEST ------ \n")
-setpoint = 100
+setpoint = 20
 runs = 30
 
 def exec_pid(f):
@@ -61,9 +61,10 @@ def exec_pid(f):
 @timer
 @exec_pid
 def execute_func2(f):
-    print(f"Motor power = : {round(f, 2)} {'%': <15}\tCurrent speed: {round(Drive.get_current_speed(), 2)}")
+    print(f"Motor power = : {round(f, 2)} \t{'%': <15}Current speed: {round(Drive.get_current_speed(), 2)}")
 
 
 print(f"Setpoint is set to: {setpoint}")
-print(f"Start speed is set to: {Drive.get_current_speed()}\n\n")
+print(f"Current speed is set to: {Drive.get_current_speed()}\n\n")
+
 execute_func2(Drive.calculate_appropriate_accel, runs)
