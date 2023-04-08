@@ -45,7 +45,7 @@ ControllerDevice.set_brake(0)
 
 ## SYSTEM TEST 1
 print("\n ------ SYSTEM TEST ------ \n")
-setpoint = 100
+setpoint = 20
 runs = 30
 
 def exec_pid(f):
