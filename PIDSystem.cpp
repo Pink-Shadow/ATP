@@ -22,7 +22,7 @@ float PIDSystem::get_new_acceleration(float setpoint_speed, float dt_){
     prev_error = error;
 
     action > 100 ? action = 100 : 
-        action < 0 ? action = 0 : action;
+        action < -100 ? action = -100 : action;
     accel_percentage = action;
 
     return action;
