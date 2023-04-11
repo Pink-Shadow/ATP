@@ -67,7 +67,7 @@ def execute_func2(f):
 print(f"Current speed is: {Drive.get_current_speed()}\n\n")
 
 setpoint = int(input("Enter a speed setpoint:\t"))
-runs = int(input("Enter how many calculations the PID-controller will execute (~10-40):\t"))
+runs = int(input("Enter how many iteration the PID-controller will run for (~10-40):\t"))
 
 execute_func2(Drive.calculate_appropriate_accel, runs)
 
