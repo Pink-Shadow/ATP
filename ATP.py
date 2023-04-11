@@ -27,7 +27,6 @@ ControllerDevice = ATP.ControllerDevice(ControllerInput)
 ## UNIT TEST 1
 
 print("\n ------ UNIT TEST ------ \n")
-
 ControllerDevice.set_cruise_state(True)
 assert ControllerInput.get_cruise_state() == 1, "Cruise_state is not equal to 1. Must be set to 1 in ControllerInput"
 print("set cruise state to [True] succeded!\n")
@@ -45,13 +44,13 @@ ControllerDevice.set_brake(0)
 
 ## SYSTEM TEST 1
 print("\n ------ SYSTEM TEST ------ \n")
-setpoint = 20
-runs = 30
+
+
 
 def exec_pid(f):
     def inner(a, runs, dt=0.000001):
         if runs <= 0:
-            return
+            return 
         t1 = time.perf_counter()
         f(a(setpoint,dt))
         dt = time.perf_counter() - t1
@@ -64,7 +63,12 @@ def execute_func2(f):
     print(f"Motor power = : {round(f, 2)} {'%': <15}\tCurrent speed: {round(Drive.get_current_speed(), 2)}")
 
 
-print(f"Setpoint is set to: {setpoint}")
-print(f"Current speed is set to: {Drive.get_current_speed()}\n\n")
+
+print(f"Current speed is: {Drive.get_current_speed()}\n\n")
+
+setpoint = int(input("Enter a speed setpoint:\t"))
+runs = int(input("Enter how many calculations the PID-controller will execute (~10-40):\t"))
 
 execute_func2(Drive.calculate_appropriate_accel, runs)
+
+
